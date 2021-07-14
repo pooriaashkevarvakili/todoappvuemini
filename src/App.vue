@@ -4,7 +4,7 @@
   <label>
   pooria
     <input v-model="input"/>
-
+{{input}}
   </label>
   <div>
   <select style="margin-top:100px;width:200px">
@@ -19,18 +19,62 @@
   </select>
   </div>
   </div>
+  <div style="margin-top:20px" class="list-demo">
+    <button @click="add">Add</button>
+  <button style="margin-left:10px" @click="remove">Remove</button>
+  <transition-group name="list" tag="p">
+    <span v-for="item in items" :key="item" class="list-item">
+      {{ item }}
+    </span>
+  </transition-group>
 
+  </div>
+<router-view v-slot="{ Component }">
+  <template v-if="Component">
+    <transition mode="out-in">
+      <keep-alive>
+        <suspense>
+          <component :is="Component"></component>
+          <template #fallback>
+            <div>
+              Loading...
+            </div>
+          </template>
+        </suspense>
+      </keep-alive>
+    </transition>
+  </template>
+</router-view>
 </template>
 <script lang="ts">
 import {useStore} from "vuex"
 import {defineComponent,ref,UnwrapRef,reactive,computed} from "vue"
 interface Input{
   name:string;
-  id:number
+  id:number|string;
 }
 export default defineComponent({
   name:'app',
+    data() {
+    return {
+      items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      nextNum: 10
+    }
+  },
+  methods:{
+    randomIndex() {
+      return Math.floor(Math.random() * this.items.length)
+    },
+    add() {
+      this.items.splice(this.randomIndex(), 0, this.nextNum++)
+    },
+    remove() {
+      this.items.splice(this.randomIndex(), 1)
+    }
+  },
   setup(){
+  
+   
 const state=reactive([
   {
     name:"pooria",
@@ -45,37 +89,31 @@ id:1
     id:3
   }
 ])
-       const Form: UnwrapRef<Input> = reactive({
-      name: '',
-      id:''
+  const Form: UnwrapRef<Input> = reactive({
+    id:'',
+    name:''
     });
     const store=useStore()
     store.dispatch('todos/gettodos')
-     const todos= computed(() => store.state.todos),
+     const todos= computed(() => store.state.todos)
 const input=ref('')
-return{input,Form,state,todos}
+return{Form,input,state,todos}
   }
 })
 </script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>
