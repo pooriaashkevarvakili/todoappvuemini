@@ -48,6 +48,13 @@
 <div>
 <EmitButton :firstName="firstName" :lastName="lastName" @onRemove="onRemove"/>
 </div>
+<div>
+<teleport to="#pooria">
+<div>
+p
+</div>
+</teleport>
+</div>
 </template>
 <script lang="ts">
 import EmitButton from '@/EmitButton.vue'
