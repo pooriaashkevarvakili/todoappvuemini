@@ -48,7 +48,7 @@
 </template>
 <script lang="ts">
 import {useStore} from "vuex"
-import {defineComponent,ref,UnwrapRef,reactive,computed} from "vue"
+import {defineComponent,ref,UnwrapRef,reactive,computed,onMounted,onUpdated,onUnmounted} from "vue"
 interface Input{
   name:string;
   id:number|string;
@@ -73,8 +73,16 @@ export default defineComponent({
     }
   },
   setup(){
-  
-   
+    onUnmounted(()=>{
+      console.log('unmouted')
+    })
+ onMounted(()=>{
+   console.log('mounted')
+ })
+   onUpdated(()=>{
+     console.log('updated')
+   })
+
 const state=reactive([
   {
     name:"pooria",
@@ -97,7 +105,10 @@ id:1
     store.dispatch('todos/gettodos')
      const todos= computed(() => store.state.todos)
 const input=ref('')
-return{Form,input,state,todos}
+return{Form,input,state,todos
+
+
+}
   }
 })
 </script>
