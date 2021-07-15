@@ -45,8 +45,12 @@
     </transition>
   </template>
 </router-view>
+<div>
+<EmitButton :firstName="firstName" :lastName="lastName" @onRemove="onRemove"/>
+</div>
 </template>
 <script lang="ts">
+import EmitButton from '@/EmitButton.vue'
 import {useStore} from "vuex"
 import {defineComponent,ref,UnwrapRef,reactive,computed,onMounted,onUpdated,onUnmounted} from "vue"
 interface Input{
@@ -55,6 +59,9 @@ interface Input{
 }
 export default defineComponent({
   name:'app',
+  components:{
+    EmitButton
+  },
     data() {
     return {
       items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
